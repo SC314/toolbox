@@ -37,7 +37,7 @@ export default function App() {
               <Input
                 name="email"
                 type="email"
-                placeholder="johndoe@email.com"
+                placeholder="[ ... ]"
               />
 
             </FormControl>
@@ -45,7 +45,7 @@ export default function App() {
               <FormLabel>
                 Password
               </FormLabel>
-              <Input name="password" type="password" placeholder="password" />
+              <Input name="password" type="password" placeholder="[ ... ]" />
 
             </FormControl>
             <Button
