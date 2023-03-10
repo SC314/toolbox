@@ -1,6 +1,5 @@
 import { Stack } from "@mui/material";
 import React from "react";
-import Card from "@components/Card";
 
 export default function Home() {
   return (
@@ -15,9 +14,7 @@ export default function Home() {
       direction="row"
       spacing={1}
     >
-      <Card />
-      <Card />
-      <Card />
+      c
     </Stack>
   );
 }
