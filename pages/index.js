@@ -1,14 +1,21 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
-import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
-import { FormControl } from "@mui/joy";
-import FormLabel from "@mui/joy/FormLabel";
 import Stack from "@mui/joy/Stack";
-import Checkbox from "@mui/joy/Checkbox";
+import { useRouter } from "next/router";
+import User from "@components/paths/login/User";
+import Password from "@components/paths/login/Password";
+import StaySignedIn from "@components/paths/login/StaySignedIn";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const [credentials, setCredentials] = useState({});
+  const loginRouter = useRouter();
+
+  useEffect(() => {
+    console.log(credentials);
+  }, [credentials]);
+
   return (
     <CssVarsProvider>
       <main>
@@ -33,31 +40,15 @@ export default function Login() {
             spacing={2}
             variant="outlined"
           >
-            <FormControl>
-              <FormLabel>
-                User
-              </FormLabel>
-              <Input
-                name="email"
-                type="email"
-                disabled={loading}
-                placeholder="[ ... ]"
-              />
-
-            </FormControl>
-            <FormControl>
-              <FormLabel>
-                Password
-              </FormLabel>
-              <Input
-                name="password"
-                type="password"
-                placeholder="[ ... ]"
-                disabled={loading}
-              />
-            </FormControl>
-            <Checkbox
-              label="Stay signed in"
+            <User
+              handleUser={setCredentials}
+              disabled={loading}
+            />
+            <Password
+              handlePassword={setCredentials}
+              disabled={loading}
+            />
+            <StaySignedIn
               disabled={loading}
             />
             <Button
@@ -67,6 +58,7 @@ export default function Login() {
                 setLoading(true);
                 setTimeout(() => {
                   setLoading(false);
+                  loginRouter.push("/homepage");
                 }, 1000);
               }}
             >
