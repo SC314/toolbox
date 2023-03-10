@@ -1,12 +1,14 @@
-import * as React from "react";
+import { React, useState } from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import { FormControl } from "@mui/joy";
 import FormLabel from "@mui/joy/FormLabel";
 import Stack from "@mui/joy/Stack";
+import Checkbox from "@mui/joy/Checkbox";
 
 export default function App() {
+  const [loading, setLoading] = useState(false);
   return (
     <CssVarsProvider>
       <main>
@@ -28,6 +30,7 @@ export default function App() {
               boxShadow: "var(--shadow)",
               backgroundColor: "white",
             }}
+            spacing={2}
             variant="outlined"
           >
             <FormControl>
@@ -37,6 +40,7 @@ export default function App() {
               <Input
                 name="email"
                 type="email"
+                disabled={loading}
                 placeholder="[ ... ]"
               />
 
@@ -45,12 +49,26 @@ export default function App() {
               <FormLabel>
                 Password
               </FormLabel>
-              <Input name="password" type="password" placeholder="[ ... ]" />
-
+              <Input
+                name="password"
+                type="password"
+                placeholder="[ ... ]"
+                disabled={loading}
+              />
             </FormControl>
+            <Checkbox
+              label="Stay signed in"
+              disabled={loading}
+            />
             <Button
+              loading={loading}
               variant="soft"
-              sx={{ mt: 1.5 }}
+              onClick={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  setLoading(false);
+                }, 1000);
+              }}
             >
               Log in
             </Button>
