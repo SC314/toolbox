@@ -3,7 +3,7 @@ import { Stack, Typography } from "@mui/joy";
 import { React } from "react";
 
 // eslint-disable-next-line react/prop-types
-export default function SongInfo({index, songs}) {
+export default function SongInfo({index, songs, song}) {
   return (
     <Stack
       sx={{
@@ -28,7 +28,7 @@ export default function SongInfo({index, songs}) {
           color: "white",
         }}
       >
-        Song
+        {song.name}
       </Typography>
       <Typography
         level="body1"
@@ -37,7 +37,7 @@ export default function SongInfo({index, songs}) {
           color: "gray",
         }}
       >
-        Artist
+        {song.artist}
       </Typography>
     </Stack>
   );

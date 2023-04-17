@@ -8,8 +8,17 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export default function PlaylistOptions({ addSong }) {
   const [newSong, setNewSong] = useState();
+  const [newArtist, setNewArtist] = useState();
+  const [newSongName, setNewSongName] = useState();
+
   const handleAddSong = () => {
-    addSong((prevSongs) => [...prevSongs, newSong]);
+    const newEntry = {
+      url: newSong,
+      name: newSongName,
+      artist: newArtist,
+    };
+
+    addSong((prevSongs) => [...prevSongs, newEntry]);
   };
 
   return (
@@ -33,6 +42,16 @@ export default function PlaylistOptions({ addSong }) {
         variant="soft"
         placeholder="[ Add song ]"
         onChange={(e) => setNewSong(e.target.value)}
+      />
+      <Input
+        variant="soft"
+        placeholder="[ Song Name ]"
+        onChange={(e) => setNewSongName(e.target.value)}
+      />
+      <Input
+        variant="soft"
+        placeholder="[ Artist ]"
+        onChange={(e) => setNewArtist(e.target.value)}
       />
     </Stack>
   );

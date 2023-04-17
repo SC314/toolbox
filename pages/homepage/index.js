@@ -14,7 +14,11 @@ import ReactPlayer from "react-player";
 
 export default function Login() {
   const [videoUrl, setVideoUrl] = useState("");
-  const [inputUrl, setInputUrl] = useState(["https://www.youtube.com/watch?v=lEeh5Mzxwe4"]);
+  const [songs, setSongs] = useState([{
+    artist: "Speed Up",
+    name: "Give Me Everithing",
+    url: "https://www.youtube.com/watch?v=lEeh5Mzxwe4",
+  }]);
   // eslint-disable-next-line no-unused-vars
   const [songIndex, setSongIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -36,14 +40,14 @@ export default function Login() {
   }, [duration]);
 
   const handleNext = () => {
-    const nextIndex = (songIndex + 1) % inputUrl.length;
+    const nextIndex = (songIndex + 1) % songs.length;
     setSongIndex(nextIndex);
     setCurrentTime(0);
     setLoopStart(0);
   };
 
   const handlePrevious = () => {
-    const previousIndex = (songIndex - 1 + inputUrl.length) % inputUrl.length;
+    const previousIndex = (songIndex - 1 + songs.length) % songs.length;
     setSongIndex(previousIndex);
     setCurrentTime(0);
     setLoopStart(0);
@@ -54,8 +58,8 @@ export default function Login() {
   };
 
   const onSubmit = () => {
-    if (inputUrl) {
-      setVideoUrl(inputUrl[songIndex]);
+    if (songs) {
+      setVideoUrl(songs[songIndex].url);
     }
   };
 
@@ -100,7 +104,7 @@ export default function Login() {
       }}
     >
       <Stack spacing={2}>
-        <SongInfo index={songIndex + 1} songs={inputUrl.length} />
+        <SongInfo index={songIndex + 1} songs={songs.length} song={songs[songIndex]} />
         <MusicCotrolls
           pause={isPause}
           handlePlayPause={handlePlayPause}
@@ -126,7 +130,7 @@ export default function Login() {
           />
         </Stack>
         <PlaylistOptions
-          addSong={setInputUrl}
+          addSong={setSongs}
         />
       </Stack>
       {videoUrl && (
