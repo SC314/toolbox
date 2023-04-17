@@ -1,7 +1,9 @@
+/* eslint-disable object-curly-spacing */
 import { Stack, Typography } from "@mui/joy";
 import { React } from "react";
 
-export default function SongInfo() {
+// eslint-disable-next-line react/prop-types
+export default function SongInfo({index, songs}) {
   return (
     <Stack
       sx={{
@@ -10,6 +12,15 @@ export default function SongInfo() {
         alignItems: "center",
       }}
     >
+      <Typography
+        level="body3"
+        fontSize="xl"
+        sx={{
+          color: "gray",
+        }}
+      >
+        {`${index}/${songs}`}
+      </Typography>
       <Typography
         level="h2"
         fontSize="xl"

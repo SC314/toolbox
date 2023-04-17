@@ -100,7 +100,7 @@ export default function Login() {
       }}
     >
       <Stack spacing={2}>
-        <SongInfo />
+        <SongInfo index={songIndex + 1} songs={inputUrl.length} />
         <MusicCotrolls
           pause={isPause}
           handlePlayPause={handlePlayPause}
