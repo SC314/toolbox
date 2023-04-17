@@ -42,7 +42,7 @@ export default function LoopSlider({ loopStart, loopEnd, duration, handleLoopCha
         color="warning"
         value={[loopStart, loopEnd]}
         min={0}
-        max={100}
+        max={duration}
         onChange={handleChange}
         components={{
           ValueLabel: ValueLabelComponent,
