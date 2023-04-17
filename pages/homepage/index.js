@@ -38,7 +38,6 @@ export default function Login() {
   const handleNext = () => {
     const nextIndex = (songIndex + 1) % inputUrl.length;
     setSongIndex(nextIndex);
-    setLoopEnd(100);
     setCurrentTime(0);
     setLoopStart(0);
   };
@@ -46,7 +45,6 @@ export default function Login() {
   const handlePrevious = () => {
     const previousIndex = (songIndex - 1 + inputUrl.length) % inputUrl.length;
     setSongIndex(previousIndex);
-    setLoopEnd(100);
     setCurrentTime(0);
     setLoopStart(0);
   };
