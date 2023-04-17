@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { Button, Stack } from "@mui/joy";
 import { React } from "react";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
@@ -5,7 +7,7 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 
-export default function MusicCotrolls({ pause, handlePlayPause }) {
+export default function MusicCotrolls({ pause, handlePlayPause, handleNextSong }) {
   return (
     <Stack
       direction="row"
@@ -37,6 +39,7 @@ export default function MusicCotrolls({ pause, handlePlayPause }) {
       <Button
         variant="outlined"
         color="success"
+        onClick={() => handleNextSong()}
       >
         <SkipNextIcon />
       </Button>

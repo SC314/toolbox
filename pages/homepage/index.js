@@ -14,8 +14,9 @@ import ReactPlayer from "react-player";
 
 export default function Login() {
   const [videoUrl, setVideoUrl] = useState("");
+  const [inputUrl, setInputUrl] = useState(["https://www.youtube.com/watch?v=6dPezw1HxSU"]);
   // eslint-disable-next-line no-unused-vars
-  const [inputUrl, setInputUrl] = useState("https://www.youtube.com/watch?v=6dPezw1HxSU");
+  const [songIndex, setSongIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(0.2);
   const [duration, setDuration] = useState(0);
@@ -34,13 +35,17 @@ export default function Login() {
     setLoopEnd(duration);
   }, [duration]);
 
+  const handleNextSong = () => {
+    setSongIndex(songIndex + 1);
+  };
+
   const handleVolumeChange = (event, newValue) => {
     setVolume(newValue);
   };
 
   const onSubmit = () => {
     if (inputUrl) {
-      setVideoUrl(inputUrl);
+      setVideoUrl(inputUrl[songIndex]);
     }
   };
 
@@ -65,6 +70,10 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    onSubmit();
+  }, [songIndex]);
+
   return (
     <Stack
       spacing={1}
@@ -82,7 +91,11 @@ export default function Login() {
     >
       <Stack spacing={2}>
         <SongInfo />
-        <MusicCotrolls pause={isPause} handlePlayPause={handlePlayPause} />
+        <MusicCotrolls
+          pause={isPause}
+          handlePlayPause={handlePlayPause}
+          handleNextSong={handleNextSong}
+        />
         <Stack width="30vh">
           <TimeSlider
             currentTime={currentTime}
@@ -101,7 +114,9 @@ export default function Login() {
             handleLoopChange={handleLoopChange}
           />
         </Stack>
-        <PlaylistOptions />
+        <PlaylistOptions
+          addSong={setInputUrl}
+        />
       </Stack>
       {videoUrl && (
       <ReactPlayer
