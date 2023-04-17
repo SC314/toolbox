@@ -18,6 +18,7 @@ export default function VolumeSlider({ volume, handleVolumeChange }) {
       <Slider
         value={volume}
         min={0}
+        valueLabelDisplay="auto"
         max={1}
         step={0.01}
         onChange={handleVolumeChange}
