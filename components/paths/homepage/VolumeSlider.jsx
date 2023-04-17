@@ -1,8 +1,10 @@
-import { Slider, Stack } from "@mui/joy";
+import { Stack } from "@mui/joy";
 import { React } from "react";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import Slider from "@mui/material/Slider";
 
-export default function VolumeSlider() {
+// eslint-disable-next-line react/prop-types
+export default function VolumeSlider({ volume, handleVolumeChange }) {
   return (
     <Stack
       spacing={2}
@@ -14,7 +16,15 @@ export default function VolumeSlider() {
       }}
     >
       <Slider
-        color="info"
+        value={volume}
+        min={0}
+        max={1}
+        step={0.01}
+        onChange={handleVolumeChange}
+        aria-labelledby="volume-slider"
+        sx={{
+          color: "#980eed",
+        }}
       />
       <VolumeUpIcon sx={{
         color: "white",

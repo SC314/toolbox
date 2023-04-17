@@ -3,8 +3,9 @@ import { React } from "react";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 
-export default function MusicCotrolls() {
+export default function MusicCotrolls({ pause, handlePlayPause }) {
   return (
     <Stack
       direction="row"
@@ -25,8 +26,13 @@ export default function MusicCotrolls() {
       <Button
         variant="outlined"
         color="success"
+        onClick={() => handlePlayPause()}
       >
-        <PlayArrowIcon />
+        {pause ? (
+          <PlayArrowIcon />
+        ) : (
+          <PauseIcon />
+        )}
       </Button>
       <Button
         variant="outlined"

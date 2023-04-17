@@ -1,15 +1,67 @@
 import {
   Stack,
 } from "@mui/joy";
-import { React } from "react";
+import {
+  React, useEffect, useRef, useState,
+} from "react";
 import SongInfo from "@components/paths/homepage/SongInfo";
 import MusicCotrolls from "@components/paths/homepage/MusicControlls";
 import TimeSlider from "@components/paths/homepage/TimeSlider";
 import VolumeSlider from "@components/paths/homepage/VolumeSlider";
 import LoopSlider from "@components/paths/homepage/LoopSlider";
 import PlaylistOptions from "@components/paths/homepage/PlaylistOptions";
+import ReactPlayer from "react-player";
 
 export default function Login() {
+  const [videoUrl, setVideoUrl] = useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [inputUrl, setInputUrl] = useState("https://www.youtube.com/watch?v=6dPezw1HxSU");
+  const [currentTime, setCurrentTime] = useState(0);
+  const [volume, setVolume] = useState(0.2);
+  const [duration, setDuration] = useState(0);
+  const [isPause, setIsPause] = useState(true);
+  const [loopStart, setLoopStart] = useState(0);
+  const [loopEnd, setLoopEnd] = useState(100);
+  const playerRef = useRef(null);
+
+  useEffect(() => {
+    if (currentTime >= loopEnd && loopEnd > 0) {
+      playerRef.current.seekTo(loopStart);
+    }
+  }, [currentTime, loopStart, loopEnd]);
+
+  useEffect(() => {
+    setLoopEnd(duration);
+  }, [duration]);
+
+  const handleVolumeChange = (event, newValue) => {
+    setVolume(newValue);
+  };
+
+  const onSubmit = () => {
+    if (inputUrl) {
+      setVideoUrl(inputUrl);
+    }
+  };
+
+  const handlePlayPause = () => {
+    onSubmit();
+    setIsPause(!isPause);
+  };
+
+  const handleSliderChange = (event, newValue) => {
+    setCurrentTime(newValue);
+    if (playerRef.current) {
+      playerRef.current.seekTo(newValue);
+    }
+  };
+
+  const handleLoopChange = ([newStart, newEnd]) => {
+    setLoopStart(newStart);
+    setLoopEnd(newEnd);
+    playerRef.current.seekTo(newStart);
+  };
+
   return (
     <Stack
       spacing={1}
@@ -27,14 +79,48 @@ export default function Login() {
     >
       <Stack spacing={2}>
         <SongInfo />
-        <MusicCotrolls />
+        <MusicCotrolls pause={isPause} handlePlayPause={handlePlayPause} />
         <Stack width="30vh">
-          <TimeSlider />
-          <VolumeSlider />
-          <LoopSlider />
+          <TimeSlider
+            currentTime={currentTime}
+            duration={duration}
+            ref={playerRef}
+            handleSliderChange={handleSliderChange}
+          />
+          <VolumeSlider
+            volume={volume}
+            handleVolumeChange={handleVolumeChange}
+          />
+          <LoopSlider
+            loopStart={loopStart}
+            loopEnd={loopEnd}
+            duration={duration}
+            handleLoopChange={handleLoopChange}
+          />
         </Stack>
         <PlaylistOptions />
       </Stack>
+      {videoUrl && (
+      <ReactPlayer
+        ref={playerRef}
+        url={videoUrl}
+        volume={volume}
+        playing={!isPause}
+        progressInterval={10}
+        width="0"
+        height="0"
+        style={{
+          display: "none",
+        }}
+        config={{
+          youtube: {
+            playerVars: { showinfo: 0, controls: 0, modestbranding: 1 },
+          },
+        }}
+        onProgress={({ playedSeconds }) => setCurrentTime(playedSeconds)}
+        onDuration={(videoDuration) => setDuration(videoDuration)}
+      />
+      )}
     </Stack>
   );
 }
