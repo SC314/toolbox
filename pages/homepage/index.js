@@ -57,9 +57,12 @@ export default function Login() {
   };
 
   const handleLoopChange = ([newStart, newEnd]) => {
-    setLoopStart(newStart);
-    setLoopEnd(newEnd);
-    playerRef.current.seekTo(newStart);
+    if (newStart !== loopStart) {
+      setLoopStart(newStart);
+      playerRef.current.seekTo(newStart);
+    } else {
+      setLoopEnd(newEnd);
+    }
   };
 
   return (
