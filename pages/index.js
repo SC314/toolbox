@@ -1,72 +1,159 @@
-import { React, useEffect, useState } from "react";
-import { CssVarsProvider } from "@mui/joy/styles";
-import Button from "@mui/joy/Button";
-import Stack from "@mui/joy/Stack";
-import { useRouter } from "next/router";
-import User from "@components/paths/login/User";
-import Password from "@components/paths/login/Password";
-import StaySignedIn from "@components/paths/login/StaySignedIn";
+import {
+  Stack,
+} from "@mui/joy";
+import {
+  React, useEffect, useRef, useState,
+} from "react";
+import SongInfo from "@components/paths/homepage/SongInfo";
+import MusicCotrolls from "@components/paths/homepage/MusicControlls";
+import TimeSlider from "@components/paths/homepage/TimeSlider";
+import VolumeSlider from "@components/paths/homepage/VolumeSlider";
+import LoopSlider from "@components/paths/homepage/LoopSlider";
+import PlaylistOptions from "@components/paths/homepage/PlaylistOptions";
+import ReactPlayer from "react-player";
 
 export default function Login() {
-  const [loading, setLoading] = useState(false);
-  const [credentials, setCredentials] = useState({});
-  const loginRouter = useRouter();
+  const [videoUrl, setVideoUrl] = useState("");
+  const [songs, setSongs] = useState([{
+    artist: "Speed Up",
+    name: "Give Me Everithing",
+    url: "https://www.youtube.com/watch?v=lEeh5Mzxwe4",
+  }]);
+  // eslint-disable-next-line no-unused-vars
+  const [songIndex, setSongIndex] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [volume, setVolume] = useState(0.2);
+  const [duration, setDuration] = useState(0);
+  const [isPause, setIsPause] = useState(true);
+  const [loopStart, setLoopStart] = useState(0);
+  const [loopEnd, setLoopEnd] = useState(100);
+  const playerRef = useRef(null);
 
   useEffect(() => {
-    console.log(credentials);
-  }, [credentials]);
+    if (currentTime >= loopEnd && loopEnd > 0) {
+      playerRef.current.seekTo(loopStart);
+    }
+  }, [currentTime, loopStart, loopEnd]);
+
+  useEffect(() => {
+    setLoopEnd(duration);
+  }, [duration]);
+
+  const handleNext = () => {
+    const nextIndex = (songIndex + 1) % songs.length;
+    setSongIndex(nextIndex);
+    setCurrentTime(0);
+    setLoopStart(0);
+  };
+
+  const handlePrevious = () => {
+    const previousIndex = (songIndex - 1 + songs.length) % songs.length;
+    setSongIndex(previousIndex);
+    setCurrentTime(0);
+    setLoopStart(0);
+  };
+
+  const handleVolumeChange = (event, newValue) => {
+    setVolume(newValue);
+  };
+
+  const onSubmit = () => {
+    if (songs) {
+      setVideoUrl(songs[songIndex].url);
+    }
+  };
+
+  const handlePlayPause = () => {
+    onSubmit();
+    setIsPause(!isPause);
+  };
+
+  const handleSliderChange = (event, newValue) => {
+    setCurrentTime(newValue);
+    if (playerRef.current) {
+      playerRef.current.seekTo(newValue);
+    }
+  };
+
+  const handleLoopChange = ([newStart, newEnd]) => {
+    if (newStart !== loopStart) {
+      setLoopStart(newStart);
+      playerRef.current.seekTo(newStart);
+    } else {
+      setLoopEnd(newEnd);
+    }
+  };
+
+  useEffect(() => {
+    onSubmit();
+  }, [songIndex]);
 
   return (
-    <CssVarsProvider>
-      <main>
-        <Stack
-          sx={{
-            minHeight: "100vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#ebedf0",
-          }}
-        >
-          <Stack
-            sx={{
-              borderRadius: "sm",
-              padding: 5,
-              width: "100%",
-              maxWidth: "300px",
-              boxShadow: "var(--shadow)",
-              backgroundColor: "white",
-            }}
-            spacing={2}
-            variant="outlined"
-          >
-            <User
-              handleUser={setCredentials}
-              disabled={loading}
-            />
-            <Password
-              handlePassword={setCredentials}
-              disabled={loading}
-            />
-            <StaySignedIn
-              disabled={loading}
-            />
-            <Button
-              loading={loading}
-              variant="soft"
-              onClick={() => {
-                setLoading(true);
-                setTimeout(() => {
-                  setLoading(false);
-                  loginRouter.push("/homepage");
-                }, 1000);
-              }}
-            >
-              Log in
-            </Button>
-          </Stack>
+    <Stack
+      spacing={1}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: "3vh",
+        height: "95vh",
+        boxShadow: "0px 1px 3px 0px #888888",
+        borderRadius: "6px",
+        backgroundImage: "linear-gradient(to bottom right, #2c3e50, #34495e)",
+        // filter: "blur(5px)",
+      }}
+    >
+      <Stack spacing={2}>
+        <SongInfo index={songIndex + 1} songs={songs.length} song={songs[songIndex]} />
+        <MusicCotrolls
+          pause={isPause}
+          handlePlayPause={handlePlayPause}
+          handleNextSong={handleNext}
+          handlePreviousSong={handlePrevious}
+        />
+        <Stack width="30vh">
+          <TimeSlider
+            currentTime={currentTime}
+            duration={duration}
+            ref={playerRef}
+            handleSliderChange={handleSliderChange}
+          />
+          <VolumeSlider
+            volume={volume}
+            handleVolumeChange={handleVolumeChange}
+          />
+          <LoopSlider
+            loopStart={loopStart}
+            loopEnd={loopEnd}
+            duration={duration}
+            handleLoopChange={handleLoopChange}
+          />
         </Stack>
-      </main>
-    </CssVarsProvider>
+        <PlaylistOptions
+          addSong={setSongs}
+        />
+      </Stack>
+      {videoUrl && (
+      <ReactPlayer
+        ref={playerRef}
+        url={videoUrl}
+        volume={volume}
+        playing={!isPause}
+        progressInterval={10}
+        width="0"
+        height="0"
+        style={{
+          display: "none",
+        }}
+        config={{
+          youtube: {
+            playerVars: { showinfo: 0, controls: 0, modestbranding: 1 },
+          },
+        }}
+        onProgress={({ playedSeconds }) => setCurrentTime(playedSeconds)}
+        onDuration={(videoDuration) => setDuration(videoDuration)}
+      />
+      )}
+    </Stack>
   );
 }
